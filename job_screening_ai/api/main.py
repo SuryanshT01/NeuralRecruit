@@ -24,7 +24,7 @@ from database import DatabaseManager
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="Job Screening AI API",
+    title="NeuralRecruit",
     description="API for AI-powered job screening and candidate matching",
     version="1.0.0"
 )
