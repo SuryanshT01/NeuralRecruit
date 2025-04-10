@@ -244,7 +244,7 @@ async def match_candidates(match_request: MatchRequest):
         candidates = [dict_to_candidate_profile(c) for c in cdicts]
         results = []
         for cand in candidates:
-            mr = matcher.match_candidate_to_job(cand, job)
+            mr = matcher.match_candidate_to_job(job, candidate=cand)
             d = mr.to_dict()
             d.update({"job_id": job.job_id, "candidate_id": cand.candidate_id, "match_date": datetime.now().isoformat()})
             db.insert_match(d)
@@ -263,10 +263,25 @@ async def shortlist_candidates(shortlist_request: ShortlistRequest):
         if not matches:
             return {"job_title": job_dict.get("title"), "company": job_dict.get("company"), "threshold_score": shortlist_request.threshold, "total_candidates": 0, "shortlisted_count": 0, "shortlisted_candidates": []}
         job = dict_to_job_description(job_dict)
-        cids = [m["candidate_id"] for m in matches]
-        cdicts = [db.get_candidate(cid) for cid in cids]
-        cmap = {c["candidate_id"]: dict_to_candidate_profile(c) for c in cdicts if c}
-        sr = shortlister.shortlist_candidates(job, matches, cmap, threshold=shortlist_request.threshold)
+        
+        # Convert dictionary matches to MatchResult objects
+        match_results = []
+        for match in matches:
+            # Create a MatchResult object from the match dictionary
+            match_result = MatchResult(
+                job_id=match["job_id"],
+                candidate_id=match["candidate_id"],
+                overall_match_score=match.get("overall_match_score", 0),
+                skill_match_score=match.get("skill_match_score", 0),
+                experience_match_score=match.get("experience_match_score", 0),
+                education_match_score=match.get("education_match_score", 0),
+                match_details=match.get("match_details", {})
+            )
+            match_results.append(match_result)
+        
+        # Now call shortlist_candidates with the list of MatchResult objects
+        sr = shortlister.shortlist_candidates(match_results, threshold=shortlist_request.threshold)
+        
         # Update shortlist status in the matches table
         for match in matches:
             candidate_id = match["candidate_id"]
