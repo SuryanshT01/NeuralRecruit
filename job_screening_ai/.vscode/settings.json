@@ -1,0 +1,10 @@
+{
+  "python.defaultInterpreterPath": "myenv\\Scripts\\python.exe",
+
+  "python.analysis.extraPaths": ["./", "./agents", "./database"],
+  
+  "python.analysis.indexing": true,
+  "python.analysis.autoSearchPaths": true,
+  "python.analysis.diagnosticMode": "workspace",
+  "python.venvPath": "${workspaceFolder}/myenv"
+}
