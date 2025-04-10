@@ -292,8 +292,8 @@ class MatcherAgent:
             skill_match_score=skill_score,
             experience_match_score=experience_score,
             education_match_score=education_score,
-    match_details=match_details
-)
+            match_details=match_details
+        )
         
         return result
 

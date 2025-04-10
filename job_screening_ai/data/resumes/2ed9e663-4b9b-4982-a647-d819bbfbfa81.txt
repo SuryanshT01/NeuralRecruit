@@ -1,0 +1,26 @@
+Candidate Resume (ID: C8676)
+ Name: Tiffany Osborne
+ Email: tiffanyosborne10@gmail.com
+ Phone: +1-496-5266
+ Education
+ Ph.D. in Artificial Intelligence (2016-2021)
+ Research in NLP and Computer Vision, with publications in top-tier conferences.
+ Bachelor of Science in Computer Science (2015-2019)
+ Specialized in Software Development and AI, with projects in deep learning and cloud computing.
+ Bachelor of Engineering in Information Technology (2014-2018)
+ Concentrated on database management, networking, and cybersecurity.
+ Work Experience
+ Software Engineer at XYZ Corp (2018-2022)
+ Developed scalable backend applications, improved system efficiency by 30%, and led agile
+ development sprints.
+ Skills
+ Cloud Computing - Expert in AWS, Azure, and GCP; implemented scalable cloud architectures for
+ enterprise applications.
+ Certifications
+ Certified Ethical Hacker (CEH) - Demonstrated proficiency in ethical hacking, network security, and
+ vulnerability assessment.
+ Achievements
+Published a research paper on AI ethics - Contributed to an AI ethics framework adopted by industry
+ leaders, shaping responsible AI development.
+ Tech Stack
+ Python, TensorFlow, PyTorch, PostgreSQL, Docker, Kubernete

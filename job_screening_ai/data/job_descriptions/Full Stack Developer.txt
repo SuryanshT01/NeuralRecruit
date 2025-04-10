@@ -1,0 +1,53 @@
+ **Full Stack Developer**
+
+**About Us:**  
+TechCorp is an innovative software solutions provider based in San Francisco, CA. We specialize in building scalable, intelligent, and user-focused digital products across industries including fintech, healthtech, and e-commerce.
+
+---
+
+**Job Description:**  
+We are seeking a talented and proactive **Full Stack Developer** to join our fast-paced Engineering team. The ideal candidate will have strong proficiency in both frontend and backend technologies and will contribute to the entire product lifecycle—from ideation to deployment.
+
+---
+
+**Responsibilities:**
+- Develop and maintain scalable web applications across the full stack  
+- Design and implement responsive UI components using modern frontend frameworks  
+- Build robust RESTful APIs and integrate third-party services  
+- Ensure performance, security, and scalability of backend services  
+- Write clean, testable, and efficient code  
+- Participate in code reviews and mentor junior developers  
+- Collaborate closely with designers, product managers, and DevOps engineers  
+
+---
+
+**Requirements:**
+- 3+ years of professional experience as a Full Stack Developer  
+- Proficiency in JavaScript, HTML5, and CSS3  
+- Strong experience with frontend frameworks (React.js, Angular, or Vue.js)  
+- Hands-on experience with backend technologies (Node.js, Express, or Django)  
+- Good understanding of databases (MongoDB, PostgreSQL, or MySQL)  
+- Familiarity with REST APIs and JSON-based data structures  
+- Knowledge of version control tools like Git  
+
+---
+
+**Preferred Skills:**
+- Experience with TypeScript and Next.js  
+- Understanding of containerization using Docker  
+- Experience deploying apps on AWS/GCP or similar cloud platforms  
+- Familiarity with Agile methodologies and CI/CD workflows  
+- Basic understanding of GraphQL  
+
+---
+
+**Education:**  
+- Bachelor’s degree in Computer Science, Software Engineering, or related field
+
+---
+
+**Job Type:** Full-time  
+**Salary Range:** $100,000 – $130,000 per year  
+**Department:** Engineering  
+**Posting Date:** 2023-09-20  
+
