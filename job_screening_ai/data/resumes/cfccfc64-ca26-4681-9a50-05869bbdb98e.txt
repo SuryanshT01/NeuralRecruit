@@ -1,0 +1,23 @@
+Candidate Resume (ID: C4523)
+ Name: Rodney Ellis
+ Email: rodneyellis90@gmail.com
+ Phone: +1-430-7550
+ Education
+ Bachelor of Science in Computer Science (2015-2019)
+ Specialized in Software Development and AI, with projects in deep learning and cloud computing.
+ Diploma in Software Engineering (2013-2015)
+ Hands-on experience in full-stack web development and mobile app creation.
+ Work Experience
+ Product Manager at DEF Ltd. (2017-2021)
+ Led cross-functional teams to develop innovative solutions, increasing product adoption by 40%.
+ Skills
+ Cybersecurity - Skilled in penetration testing, risk assessment, and securing enterprise networks
+ against cyber threats.
+ Certifications
+ AWS Certified Solutions Architect - Validated expertise in designing and deploying scalable AWS
+ solutions, optimizing performance and security.
+ Achievements
+ Developed an AI chatbot - Built a chatbot that reduced customer support tickets by 40%, enhancing
+ user experience and efficiency.
+ Tech Stack
+Java, Spring Boot, MySQL, Kafka, Azure DevOps

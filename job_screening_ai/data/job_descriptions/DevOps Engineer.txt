@@ -1,0 +1,51 @@
+ **DevOps Engineer**
+
+**About Us:**  
+TechCorp is a cutting-edge software development company headquartered in San Francisco, CA. We are committed to delivering scalable, reliable, and secure digital solutions across cloud-native platforms and enterprise ecosystems.
+
+---
+
+**Job Description:**  
+We are seeking a passionate and skilled **DevOps Engineer** to join our Infrastructure & Automation team. The ideal candidate will play a key role in optimizing development pipelines, automating infrastructure, and ensuring system reliability at scale.
+
+---
+
+**Responsibilities:**
+- Design, implement, and maintain CI/CD pipelines using tools like Jenkins, GitHub Actions, or GitLab CI  
+- Automate infrastructure provisioning using Infrastructure-as-Code tools (Terraform, CloudFormation)  
+- Monitor system performance and ensure high availability of services using observability tools (Prometheus, Grafana, ELK stack)  
+- Collaborate with developers to streamline application deployments and improve software delivery speed  
+- Manage and optimize Kubernetes clusters and Docker containers in production environments  
+- Implement robust security, backup, and disaster recovery strategies  
+- Troubleshoot production issues and perform root cause analysis  
+
+---
+
+**Requirements:**
+- 3+ years of experience in a DevOps, Site Reliability, or Systems Engineering role  
+- Proficiency with CI/CD tools and automation scripting (Bash, Python, or Groovy)  
+- Hands-on experience with Docker and container orchestration using Kubernetes  
+- Solid understanding of Linux/Unix system administration  
+- Experience with cloud platforms such as AWS, GCP, or Azure  
+- Familiarity with version control systems (Git) and agile software development workflows  
+
+---
+
+**Preferred Skills:**
+- Experience with configuration management tools like Ansible, Chef, or Puppet  
+- Knowledge of service mesh technologies (Istio, Linkerd)  
+- Experience with secrets management tools (Vault, AWS Secrets Manager)  
+- Understanding of Zero Downtime Deployments and Blue/Green or Canary release strategies  
+- Cloud certification (e.g., AWS Certified DevOps Engineer, CKA/CKAD)
+
+---
+
+**Education:**  
+- Bachelor's degree in Computer Science, IT, or a related field
+
+---
+
+**Job Type:** Full-time  
+**Salary Range:** $110,000 – $140,000 per year  
+**Department:** Infrastructure & DevOps  
+**Posting Date:** 2023-09-25  
