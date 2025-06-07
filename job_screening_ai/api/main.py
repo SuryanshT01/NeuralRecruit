@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 
-from fastapi import FastAPI, File, UploadFile, HTTPException, BackgroundTasks
+from fastapi import FastAPI, File, UploadFile, HTTPException, BackgroundTasks, Request, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -201,24 +201,47 @@ async def root():
     return {"message": "Job Screening AI API is running"}
 
 @app.post("/parse-jd/", response_model=ParseJobResponse, tags=["JobDescription"])
-async def parse_job_description(job_description: JobDescriptionRequest):
+async def parse_job_description(
+    request: Request,
+    job_description_text: Optional[str] = Form(None)
+):
     try:
-        parsed = jd_parser.parse_job_description(job_description.job_description_text)
+        # 1. Handle form submission
+        if job_description_text:
+            jd_text = job_description_text
+
+        # 2. Handle JSON payload
+        else:
+            body = await request.json()
+            jd_text = body.get("job_description_text", "")
+
+        # 3. Validation
+        if not jd_text.strip():
+            raise HTTPException(status_code=422, detail="job_description_text cannot be empty")
+
+        # 4. Existing parsing logic
+        parsed = jd_parser.parse_job_description(jd_text)
         db.insert_job_description(parsed.to_dict())
-        return {"job_id": parsed.job_id, "title": parsed.title, "company": parsed.company, "success": True}
+
+        return {
+            "job_id": parsed.job_id,
+            "title": parsed.title,
+            "company": parsed.company,
+            "success": True
+        }
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=400, detail=f"Invalid input or parse error: {str(e)}")
 
 @app.post("/upload-jd/", response_model=ParseJobResponse, tags=["JobDescription"])
 async def upload_job_description(job_description_file: UploadFile = File(...)):
-    try:
-        path = save_upload_file(job_description_file, JD_DIR)
-        text = open(path, encoding="utf-8").read()
-        parsed = jd_parser.parse_job_description(text)
-        db.insert_job_description(parsed.to_dict())
-        return {"job_id": parsed.job_id, "title": parsed.title, "company": parsed.company, "success": True}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    path = save_upload_file(job_description_file, JD_DIR)
+    text = open(path, encoding="utf-8").read()
+    if not text.strip():
+        raise HTTPException(status_code=400, detail="Uploaded file is empty")
+    parsed = jd_parser.parse_job_description(text)
+    db.insert_job_description(parsed.to_dict())
+    return {"job_id": parsed.job_id, "title": parsed.title, "company": parsed.company, "success": True}
 
 @app.post("/parse-resume/", response_model=ParseResumeResponse, tags=["Resume"])
 async def parse_resume(resume_file: UploadFile = File(...)):
@@ -316,6 +339,7 @@ async def schedule_emails(email_request: EmailRequest, background_tasks: Backgro
 @app.get("/jobs/", tags=["JobDescription"])
 async def list_jobs():
     try:
+        db.clean_null_job_ids()
         jobs = db.get_all_job_descriptions()
         return {"jobs": jobs, "count": len(jobs)}
     except Exception as e:
@@ -371,12 +395,19 @@ async def get_shortlist_for_job(job_id: str):
 @app.delete("/jobs/{job_id}", tags=["JobDescription"])
 async def delete_job(job_id: str):
     try:
-        if not db.get_job_description(job_id):
+        exists = db.get_job_description(job_id)
+        if not exists:
             raise HTTPException(status_code=404, detail="Job not found")
-        db.delete_job_description(job_id)
-        return {"message": f"Job {job_id} deleted"}
+
+        deleted = db.delete_job_description(job_id)
+        if not deleted:
+            raise HTTPException(status_code=500, detail="Failed to delete job from database")
+
+        return {"message": f"Job {job_id} deleted successfully"}
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"Error deleting job {job_id}: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error: Unable to delete job")
 
 @app.delete("/candidates/{candidate_id}", tags=["Candidate"])
 async def delete_candidate(candidate_id: str):

@@ -215,6 +215,16 @@ class DatabaseManager:
             print(f"Error getting all job descriptions: {e}")
             return []
     
+    def delete_job_description(self, job_id: str) -> bool:
+        """Delete a job description by ID"""
+        try:
+            query = "DELETE FROM job_descriptions WHERE job_id = ?"
+            self.cursor.execute(query, (job_id,))
+            self.conn.commit()
+            return self.cursor.rowcount > 0  # True if something was deleted
+        except sqlite3.Error as e:
+            print(f"Error deleting job description: {e}")
+            return False
     # Candidate operations
     def insert_candidate(self, candidate_data: Dict[str, Any]) -> bool:
         """Insert a candidate into the database"""
@@ -489,3 +499,11 @@ class DatabaseManager:
         except sqlite3.Error as e:
             print(f"Error getting emails for candidate: {e}")
             return []
+    def clean_null_job_ids(self):
+        """Delete job entries where job_id is null or empty"""
+        try:
+            self.cursor.execute("DELETE FROM job_descriptions WHERE job_id IS NULL OR TRIM(job_id) = ''")
+            self.conn.commit()
+            print("✅ Null or empty job_id rows deleted.")
+        except sqlite3.Error as e:
+            print(f"Error cleaning null job_ids: {e}")

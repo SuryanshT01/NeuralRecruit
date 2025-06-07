@@ -5,32 +5,28 @@ from typing import Dict, List, Optional, Any
 from pydantic import BaseModel, Field
 
 class JobRequirement(BaseModel):
-    """Model for job requirements"""
     required_skills: List[str] = Field(default_factory=list)
     preferred_skills: List[str] = Field(default_factory=list)
     experience: str = ""
     education: List[str] = Field(default_factory=list)
 
 class JobDescription(BaseModel):
-    """Model for parsed job description"""
     job_id: Optional[str] = None
     title: str = ""
     company: str = ""
     location: str = ""
-    job_type: str = ""  # Full-time, Part-time, Contract, etc.
+    job_type: str = ""
     description: str = ""
     responsibilities: List[str] = Field(default_factory=list)
     requirements: JobRequirement = Field(default_factory=JobRequirement)
     salary_range: str = ""
     posting_date: str = ""
     department: str = ""
-    
+
     def to_dict(self) -> Dict[str, Any]:
         return json.loads(self.json())
 
 class JDParserAgent:
-    """Agent for parsing job descriptions using Ollama LLM"""
-    
     def __init__(self, ollama_url: str = "http://localhost:11434"):
         self.ollama_url = ollama_url
         self.api_endpoint = f"{ollama_url}/api/generate"
@@ -62,74 +58,45 @@ class JDParserAgent:
         """
     
     def parse_job_description(self, job_description_text: str) -> JobDescription:
-        """Parse job description text using Ollama LLM"""
         prompt = self._generate_prompt(job_description_text)
-        
+        resp = requests.post(self.api_endpoint, json={"model": "mistral", "prompt": prompt, "stream": False})
+        if resp.status_code != 200:
+            raise RuntimeError(f"Ollama error {resp.status_code}: {resp.text}")
+
+        raw = resp.json().get("response", "")
+        clean = self._clean_json_response(raw)
         try:
-            response = requests.post(
-                self.api_endpoint,
-                json={
-                    "model": "mistral",
-                    "prompt": prompt,
-                    "stream": False
-                }
-            )
-            
-            if response.status_code == 200:
-                # Extract the generated text from Ollama response
-                generated_text = response.json().get("response", "")
-                
-                # Clean up the generated text to ensure it's valid JSON
-                # Sometimes LLMs add markdown code blocks or other text
-                json_text = self._clean_json_response(generated_text)
-                
-                # Parse JSON into our model
-                parsed_data = json.loads(json_text)
-                
-                # Create JobRequirement object
-                requirements = JobRequirement(
-                    required_skills=parsed_data.get("requirements", {}).get("required_skills", []),
-                    preferred_skills=parsed_data.get("requirements", {}).get("preferred_skills", []),
-                    experience=parsed_data.get("requirements", {}).get("experience", ""),
-                    education=parsed_data.get("requirements", {}).get("education", [])
-                )
-                
-                # Create and return JobDescription object
-                job_description = JobDescription(
-                    job_id=f"JD-{abs(hash(job_description_text)) % 10000}",  # Generate a simple JD ID
-                    title=parsed_data.get("title", ""),
-                    company=parsed_data.get("company", ""),
-                    location=parsed_data.get("location", ""),
-                    job_type=parsed_data.get("job_type", ""),
-                    description=parsed_data.get("description", ""),
-                    responsibilities=parsed_data.get("responsibilities", []),
-                    requirements=requirements,
-                    salary_range=parsed_data.get("salary_range", ""),
-                    posting_date=parsed_data.get("posting_date", ""),
-                    department=parsed_data.get("department", "")
-                )
-                
-                return job_description
-            else:
-                print(f"Error: Ollama API returned status code {response.status_code}")
-                return JobDescription()
-                
-        except Exception as e:
-            print(f"Error parsing job description: {str(e)}")
-            return JobDescription()
-    
+            data = json.loads(clean)
+        except json.JSONDecodeError:
+            raise ValueError(f"Invalid JSON from LLM: {clean}")
+
+        req = data.get("requirements", {})
+        requirements = JobRequirement(
+            required_skills=req.get("required_skills", []),
+            preferred_skills=req.get("preferred_skills", []),
+            experience=req.get("experience", ""),
+            education=req.get("education", [])
+        )
+
+        return JobDescription(
+            job_id=f"JD-{abs(hash(job_description_text)) % 10000}",
+            title=data.get("title", ""),
+            company=data.get("company", ""),
+            location=data.get("location", ""),
+            job_type=data.get("job_type", ""),
+            description=data.get("description", ""),
+            responsibilities=data.get("responsibilities", []),
+            requirements=requirements,
+            salary_range=data.get("salary_range", ""),
+            posting_date=data.get("posting_date", ""),
+            department=data.get("department", "")
+        )
+
     def _clean_json_response(self, text: str) -> str:
-        """Clean up JSON response from LLM to ensure it's valid"""
-        # Remove markdown code block indicators if present
-        text = text.replace("```json", "").replace("```", "").strip()
-        
-        # Find the first { and last } to extract just the JSON part
-        start = text.find("{")
-        end = text.rfind("}") + 1
-        
-        if start != -1 and end != 0:
-            return text[start:end]
-        return text
+        cleaned = text.replace("```json", "").replace("```", "").strip()
+        start = cleaned.find("{")
+        end = cleaned.rfind("}") + 1
+        return cleaned[start:end] if start >= 0 and end > start else cleaned
 
 # Example usage
 if __name__ == "__main__":
