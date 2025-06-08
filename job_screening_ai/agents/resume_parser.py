@@ -145,36 +145,66 @@ class ResumeParserAgent:
                 
                 # Create education objects
                 educations = []
+                
+                def safe_get_str(data, key):
+                    val = data.get(key, "")
+                    if isinstance(val, list):
+                        return ", ".join(val)
+                    if isinstance(val, str):
+                        return val
+                    return ""
+
                 for edu_data in parsed_data.get("education", []):
                     education = CandidateEducation(
-                        institution=edu_data.get("institution", ""),
-                        degree=edu_data.get("degree", ""),
-                        field_of_study=edu_data.get("field_of_study", ""),
-                        graduation_date=edu_data.get("graduation_date", "")
+                        institution=safe_get_str(edu_data, "institution"),
+                        degree=safe_get_str(edu_data, "degree"),
+                        field_of_study=safe_get_str(edu_data, "field_of_study"),
+                        graduation_date=safe_get_str(edu_data, "graduation_date")
                     )
                     educations.append(education)
+
                 
                 # Create and return CandidateProfile object
-                candidate_id = f"C-{abs(hash(resume_text)) % 10000}"  # Generate a simple candidate ID
+                candidate_id = f"C-{abs(hash(resume_text)) % 10**8}"
+                def safe_str(value):
+                    return value if isinstance(value, str) else ""
+
+                def safe_list(value):
+                    return value if isinstance(value, list) else []
+
                 profile = CandidateProfile(
                     candidate_id=candidate_id,
-                    name=parsed_data.get("name", ""),
-                    email=parsed_data.get("email", ""),
-                    phone=parsed_data.get("phone", ""),
-                    location=parsed_data.get("location", ""),
-                    linkedin=parsed_data.get("linkedin", ""),
-                    summary=parsed_data.get("summary", ""),
-                    skills=parsed_data.get("skills", []),
+                    name=safe_str(parsed_data.get("name")),
+                    email=safe_str(parsed_data.get("email")),
+                    phone=safe_str(parsed_data.get("phone")),
+                    location=safe_str(parsed_data.get("location")),
+                    linkedin=safe_str(parsed_data.get("linkedin")),
+                    summary=safe_str(parsed_data.get("summary")),
+                    skills=safe_list(parsed_data.get("skills")),
                     experience=experiences,
                     education=educations,
-                    certifications=parsed_data.get("certifications", []),
-                    languages=parsed_data.get("languages", [])
+                    certifications=safe_list(parsed_data.get("certifications")),
+                    languages=safe_list(parsed_data.get("languages"))
                 )
-                
+
                 return profile
             else:
                 print(f"Error: Ollama API returned status code {response.status_code}")
-                return CandidateProfile()
+                return CandidateProfile(
+                    candidate_id="unknown",
+                    name="",
+                    email="",
+                    phone="",
+                    location="",
+                    linkedin="",
+                    summary="",
+                    skills=[],
+                    experience=[],
+                    education=[],
+                    certifications=[],
+                    languages=[]
+                )
+
                 
         except Exception as e:
             print(f"Error parsing resume: {str(e)}")

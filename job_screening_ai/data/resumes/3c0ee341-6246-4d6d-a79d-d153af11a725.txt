@@ -1,0 +1,22 @@
+Candidate Resume (ID: C8692)
+ Name: Corey Murphy
+ Email: coreymurphy92@gmail.com
+ Phone: +1-651-4982
+ Education
+ Bachelor of Engineering in Information Technology (2014-2018)
+ Concentrated on database management, networking, and cybersecurity.
+ Work Experience
+ Data Scientist at ABC Inc. (2019-2023)
+ Built predictive models that enhanced decision-making processes, reducing operational costs by
+ 25%.
+ Skills
+ Cloud Computing - Expert in AWS, Azure, and GCP; implemented scalable cloud architectures for
+ enterprise applications.
+ Certifications
+ AWS Certified Solutions Architect - Validated expertise in designing and deploying scalable AWS
+ solutions, optimizing performance and security.
+ Achievements
+ Developed an AI chatbot - Built a chatbot that reduced customer support tickets by 40%, enhancing
+ user experience and efficiency.
+ Tech Stack
+ Cybersecurity Tools: Metasploit, Wireshark, Burp Suite, Kali Linu

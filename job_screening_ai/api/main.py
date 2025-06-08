@@ -60,7 +60,7 @@ class JobDescriptionRequest(BaseModel):
     job_description_text: str
 
 class ParseResumeResponse(BaseModel):
-    candidate_id: str
+    candidate_id: Optional[str] = "unknown"
     name: str
     email: str
     skills: List[str]
