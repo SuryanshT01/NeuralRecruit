@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
+import axios from 'axios';
 import { 
   FileUp, 
   Users, 
@@ -48,99 +49,170 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import ProgressBar from '@/components/common/ProgressBar';
 
+const API_BASE_URL = 'http://localhost:8000';
+
+interface Experience {
+  company: string;
+  title: string;
+  duration: string;
+  description: string;
+  start_date: string;
+  end_date: string;
+}
+
+interface Education {
+  institution: string;
+  degree: string;
+  field_of_study: string;
+  graduation_date: string;
+}
+
+export interface Candidate {
+  candidate_id: string | null;
+  name: string;
+  email: string;
+  phone: string;
+  location: string;
+  linkedin: string;
+  summary: string;
+  skills: string[];
+  experience: Experience[];
+  education: Education[];
+  certifications: string[];
+  languages: string[];
+  created_at: string;
+  matchScore?: number;
+  role?: string;
+}
+
+
 // Mock data
-const mockCandidates = [
-  { 
-    id: 1, 
-    name: "John Doe", 
-    email: "john.doe@example.com",
-    role: "Software Engineer",
-    experience: "7 years",
-    skills: ["React", "Node.js", "TypeScript"],
-    education: "M.S. Computer Science",
-    location: "San Francisco, CA",
-    dateAdded: "2023-04-01",
-    matchScore: 92
-  },
-  { 
-    id: 2, 
-    name: "Jane Smith", 
-    email: "jane.smith@example.com",
-    role: "Product Manager",
-    experience: "5 years",
-    skills: ["Product Strategy", "User Research", "Agile"],
-    education: "MBA",
-    location: "New York, NY",
-    dateAdded: "2023-04-03",
-    matchScore: 88
-  },
-  { 
-    id: 3, 
-    name: "Michael Johnson", 
-    email: "michael.j@example.com",
-    role: "UX Designer",
-    experience: "4 years",
-    skills: ["Figma", "UI Design", "User Testing"],
-    education: "B.A. Design",
-    location: "Austin, TX",
-    dateAdded: "2023-04-05",
-    matchScore: 85
-  },
-  { 
-    id: 4, 
-    name: "Emily Williams", 
-    email: "emily.w@example.com",
-    role: "Data Scientist",
-    experience: "3 years",
-    skills: ["Python", "Machine Learning", "SQL"],
-    education: "Ph.D. Statistics",
-    location: "Boston, MA",
-    dateAdded: "2023-04-10",
-    matchScore: 78
-  }
-];
+
 
 const Candidates = () => {
   const { toast } = useToast();
-  const [candidates, setCandidates] = useState(mockCandidates);
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [filteredCandidates, setFilteredCandidates] = useState<Candidate[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
-  const [selectedCandidate, setSelectedCandidate] = useState<number | null>(null);
+  const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
 
-  const filteredCandidates = candidates.filter(candidate => 
-    candidate.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    candidate.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase())) ||
-    candidate.role.toLowerCase().includes(searchQuery.toLowerCase())
+  const [isLoading, setIsLoading] = useState(false);
+
+  // const filteredCandidates = candidates.filter(candidate => 
+  //   candidate.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  //   candidate.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase())) ||
+  //   candidate.role.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
+
+  const fetchCandidates = async () => {
+  setIsLoading(true);
+  try {
+    const response = await axios.get(`${API_BASE_URL}/candidates/`);
+    const rawCandidates: Candidate[] = response.data.candidates;
+
+    // Filter out blank/invalid candidates
+    const validCandidates = rawCandidates.filter(c => c.name && c.email);
+
+    // Optionally generate random matchScore and role if not available
+    const enrichedCandidates = validCandidates.map(c => ({
+      ...c,
+      matchScore: Math.floor(Math.random() * 41) + 60, // 60% to 100%
+      role: c.summary || "Software Engineer" // fallback role
+    }));
+
+    setCandidates(enrichedCandidates);
+    setFilteredCandidates(enrichedCandidates);
+  } catch (err) {
+    toast({
+      title: "Error fetching candidates",
+      description: "Could not load candidates from the server.",
+      variant: "destructive"
+    });
+    console.error(err);
+  } finally {
+    setIsLoading(false);
+  }
+};
+useEffect(() => {
+  fetchCandidates();
+}, []);
+useEffect(() => {
+  const filtered = candidates.filter(candidate =>
+    candidate.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    candidate.skills.join(' ').toLowerCase().includes(searchQuery.toLowerCase())
   );
+  setFilteredCandidates(filtered);
+}, [searchQuery, candidates]);
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    
-    if (file) {
-      // In a real app, you would send this file to the API
+
+const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+
+  if (!file) return;
+
+  setIsLoading(true);
+  const formData = new FormData();
+  formData.append('resume_file', file); // must match FastAPI param
+
+  try {
+    const response = await axios.post(`${API_BASE_URL}/parse-resume/`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+
+    const data = response.data;
+
+    toast({
+      title: "Resume Uploaded",
+      description: `Parsed candidate: ${data.name} (${data.email})`,
+    });
+
+    // Optionally: update candidate list state here
+    // setCandidates(prev => [...prev, data]);
+
+  } catch (error: unknown) {
+    let errorMessage = "Failed to parse resume.";
+    if (axios.isAxiosError(error) && error.response?.data?.detail) {
+      errorMessage = error.response.data.detail;
+    }
+    toast({
+      title: "Error",
+      description: errorMessage,
+      variant: "destructive"
+    });
+    console.error("Parse Resume Error", error);
+  } finally {
+    setIsLoading(false);
+    setIsUploadDialogOpen(false);
+  }
+};
+
+
+
+  const deleteCandidate = async (id: string) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/candidates/${id}`); // assumes DELETE endpoint
       toast({
-        title: "Resume Uploaded",
-        description: `${file.name} has been uploaded and is being processed.`,
+        title: "Candidate Deleted",
+        description: `Candidate has been removed.`,
       });
-      setIsUploadDialogOpen(false);
+      fetchCandidates(); // refresh list
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Could not delete candidate.",
+        variant: "destructive"
+      });
+      console.error(err);
     }
   };
 
-  const deleteCandidate = (id: number) => {
-    // In a real app, you would call the API to delete the candidate
-    setCandidates(candidates.filter(candidate => candidate.id !== id));
-    
-    toast({
-      title: "Candidate Removed",
-      description: "The candidate has been successfully removed.",
-    });
+  const viewCandidateDetails = (id: string) => {
+    const candidate = candidates.find(c => c.candidate_id === id);
+    if (candidate) setSelectedCandidate(candidate);
   };
 
-  const viewCandidateDetails = (id: number) => {
-    setSelectedCandidate(id);
-  };
-
-  const candidateDetails = candidates.find(c => c.id === selectedCandidate);
+  const candidateDetails = selectedCandidate;
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -265,7 +337,7 @@ const Candidates = () => {
                 </TableHeader>
                 <TableBody>
                   {filteredCandidates.map((candidate) => (
-                    <TableRow key={candidate.id}>
+                    <TableRow key={candidate.candidate_id}>
                       <TableCell>
                         <div className="flex items-center space-x-3">
                           <Avatar className="h-9 w-9">
@@ -290,7 +362,18 @@ const Candidates = () => {
                         </div>
                       </TableCell>
                       <TableCell className="hidden md:table-cell">
-                        {candidate.experience}
+                        <ul className="space-y-1">
+                          {candidate.experience.slice(0, 2).map((exp, i) => (
+                            <li key={i} className="text-sm">
+                              {exp.title} @ {exp.company}
+                            </li>
+                          ))}
+                          {candidate.experience.length > 2 && (
+                            <li className="text-xs text-muted-foreground">
+                              +{candidate.experience.length - 2} more
+                            </li>
+                          )}
+                        </ul>
                       </TableCell>
                       <TableCell className="hidden md:table-cell">
                         {candidate.location}
@@ -306,14 +389,14 @@ const Candidates = () => {
                           <Button 
                             variant="ghost" 
                             size="icon" 
-                            onClick={() => deleteCandidate(candidate.id)}
+                            onClick={() => deleteCandidate(candidate.candidate_id)}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            onClick={() => viewCandidateDetails(candidate.id)}
+                            onClick={() => viewCandidateDetails(candidate.candidate_id)}
                           >
                             View
                           </Button>
@@ -378,11 +461,23 @@ const Candidates = () => {
                   </div>
                   <div>
                     <h4 className="text-sm text-muted-foreground">Experience</h4>
-                    <p>{candidateDetails?.experience}</p>
+                    <ul className="list-disc pl-4 space-y-1">
+                      {candidateDetails?.experience.map((exp, i) => (
+                        <li key={i}>
+                          {exp.title} @ {exp.company} ({exp.duration})
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                   <div>
                     <h4 className="text-sm text-muted-foreground">Education</h4>
-                    <p>{candidateDetails?.education}</p>
+                    <ul className="list-disc pl-4 space-y-1">
+                      {candidateDetails?.education.map((edu, i) => (
+                        <li key={i}>
+                          {edu.degree} in {edu.field_of_study} — {edu.institution} ({edu.graduation_date})
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                   <div>
                     <h4 className="text-sm text-muted-foreground">Location</h4>

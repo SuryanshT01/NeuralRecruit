@@ -324,7 +324,17 @@ class DatabaseManager:
         except sqlite3.Error as e:
             print(f"Error getting all candidates: {e}")
             return []
-    
+    def delete_candidate(self, candidate_id: str) -> bool:
+        """Delete a candidate by ID"""
+        try:
+            query = "DELETE FROM candidates WHERE candidate_id = ?"
+            self.cursor.execute(query, (candidate_id,))
+            self.conn.commit()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error deleting candidate: {e}")
+            return False
+        
     # Match operations
     def insert_match(self, match_data: Dict[str, Any]) -> bool:
         """Insert a match result into the database"""

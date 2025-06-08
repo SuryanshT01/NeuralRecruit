@@ -1,0 +1,53 @@
+REETIKA 
+Delhi, India | +91-8168957164 | sundriareetika@gmail.com  
+LinkedIn | Github | Leetcode  
+PROFESSIONAL SUMMARY  
+Second-year B.Tech Computer Science student with strong foundational knowledge in software engineering and 
+hands-on experience in full-stack development and machine learning. Proficient in Java, Python, C++, and modern web 
+technologies. Proven ability to lead teams, solve complex problems, and deliver impactful software solutions. 
+TECHNICAL SKILL 
+● Programming Languages: Java, C, C++, Python, JavaScript 
+● Web Development:  React.js, Redux, Node.js, MongoDB, MySQL, HTML, CSS, Bootstrap 
+● Machine Learning: TensorFlow, PyTorch, scikit-learn 
+● Tools & Platforms: Git, GitHub, IntelliJ, VSCode, JupyterNotebook, Google Colab 
+● Relevant Coursework: Data Structures & Algorithms, Operating Systems, Computer Networks, Database 
+Systems, Machine Learning 
+● Languages: English (Full Professional Proficiency), Hindi (Native Proficiency) 
+● Soft Skills: Communication, Team Collaboration, Problem-Solving, Time Management, Adaptability 
+PROJECTS  
+● NeuralRecruit – AI-driven Multi-Agent Job Screening System 
+○ Developed an end-to-end AI system using Ollama-powered LLMs (Mistral, LLaMA) to parse job 
+descriptions and resumes 
+○ Implemented candidate-job matching algorithms, scoring candidates based on skills and experience 
+○ Automated interview scheduling via email notifications; stored structured data in SQLite 
+○ Improved screening accuracy by 30% through iterative model tuning and data validation 
+● Prime Minister Special Scholarship Portal 
+○ Developed a digital platform for paperless scholarship disbursement with secure document submission 
+and automated workflows. 
+○ Integrated Digilocker API for secure document verification and OAuth for secure authentication. 
+○ Added real-time tracking and payment system integration to streamline the scholarship process. 
+○ Tech Stack: React.js, Node.js, MongoDB, Digilocker API, OAuth, JWT 
+● Mental Health Predictor:  
+○ Developed a machine learning model using Python and scikit-learn to predict mental health conditions 
+based on workplace and personal factors. 
+○ Utilized Random Forest Classifier for early detection, enhancing preventive mental healthcare. 
+WORK EXPERIENCE 
+● Data Science Intern - IBM SkillsBuild x CSRBOX            
+(Oct’24 - Nov’24) 
+○ Completed intensive training in machine learning and data analysis, working on real-world projects. 
+○ Enhanced skills in Python, ML algorithms, and data visualization techniques. 
+ACHIEVEMENTS AND LEADERSHIP 
+● Finalist- Smart India Hackathon:Developed innovative scholarship portal under PMSSS 
+● Content Head, IOSD Society – [Maharaja Agrasen Institute of Technology]: 
+○ Led content creation and strategy, driving engagement for society events and initiatives. 
+○ Collaborated with teams to organize and promote multiple events, increasing participation by 50%. 
+○ Streamlined content workflows, ensuring timely and impactful communication across platforms. 
+EDUCATION 
+● Bachelor of Technology Maharaja Agrasen Institute of Technology, Delhi                 
+Guru Gobind Singh Indraprastha University,                          
+● Senior Secondary (XII) | CBSE White leaf public school , Delhi            
+● Secondary (X) | CBSE Holy Angel School , Hisar              
+| CGPA: 8.0/10 
+(2023-2027) 
+| 80% 
+| 92% 

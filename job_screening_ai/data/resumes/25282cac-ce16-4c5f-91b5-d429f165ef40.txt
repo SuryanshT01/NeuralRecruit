@@ -1,0 +1,46 @@
+Emily Carter
+Senior Research Scientist | Machine Learning Expert
+San Francisco, CA | emily.carter@example.com | +1-555-123-4567
+LinkedIn: https://linkedin.com/in/emilycarter
+
+Professional Summary:
+AI researcher with 8+ years of experience in machine learning, deep learning, and NLP. Adept at building scalable ML systems and leading research initiatives in generative AI.
+
+Skills:
+- Machine Learning, Deep Learning, NLP
+- Python, TensorFlow, PyTorch, Scikit-learn
+- AWS, Docker, Kubernetes, SQL
+- Git, CI/CD, MLOps
+
+Experience:
+OpenAI – Senior Research Scientist  
+Jan 2019 – Present  
+- Led research on transformer architectures (GPT models).  
+- Published 10+ papers in top AI conferences (NeurIPS, ICML, CVPR).  
+- Collaborated cross-functionally with engineering and product teams.
+
+DeepMind – Machine Learning Engineer  
+Jun 2015 – Dec 2018  
+- Developed reinforcement learning models for strategy games.  
+- Contributed to model training pipeline and optimization.  
+- Deployed models at scale using Google Cloud and Kubernetes.
+
+Education:
+Stanford University – Ph.D. in Artificial Intelligence  
+Graduated: 2015
+
+MIT – B.Sc. in Computer Science  
+Graduated: 2010
+
+Certifications:
+- AWS Certified Machine Learning – Specialty  
+- Google Cloud Professional ML Engineer  
+
+Languages:
+English (native), Spanish (fluent), German (basic)
+
+Publications:
+- "Language Models are Few-Shot Learners" – NeurIPS 2020  
+- "Contrastive Language-Image Pretraining" – ICML 2021
+
+References available on request.
